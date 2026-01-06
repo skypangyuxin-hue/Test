@@ -589,7 +589,7 @@
                 ${y.additionalInfo ? `<div class="additional-info">${y.additionalInfo}</div>` : ''}
 
                 <p class="section-header">Executive Compensation Breakdown</p>
-                <div class="executives-grid">${y.executives.map(e => renderExecutiveCard(e, c.currency)).join('')}</div>
+                <div class="executives-grid">${y.executives.map(e => renderExecutiveCard(e, c.currency, c.equityAwards && c.equityAwards[e.name])).join('')}</div>
             `;
 
             // Add collapsible equity awards for DMG
@@ -611,7 +611,6 @@
                                             <th>Grant Date</th>
                                             <th>Exercise Price</th>
                                             <th>Price at Grant</th>
-                                            <th>2024 Year End</th>
                                             <th>Expiry</th>
                                         </tr>
                                     </thead>
@@ -623,7 +622,6 @@
                                                 <td>${x.grantDate}</td>
                                                 <td>${x.exercisePrice ? 'C$' + x.exercisePrice.toFixed(2) : '-'}</td>
                                                 <td>C$${x.priceAtGrant.toFixed(2)}</td>
-                                                <td>C$${x.priceAtYearEnd.toFixed(2)}</td>
                                                 <td>${x.expiry}</td>
                                             </tr>
                                         `).join('')}
@@ -645,7 +643,7 @@
             content.classList.toggle('visible');
         }
 
-        function renderExecutiveCard(e, cur) {
+        function renderExecutiveCard(e, cur, hasEquityAwards) {
             const items = [];
             if (e.salary) items.push({ label: 'Base Salary', value: e.salary });
             if (e.cashBonus) items.push({ label: 'Cash Bonus', value: e.cashBonus });
@@ -653,6 +651,7 @@
             if (e.stockAwardsValue) items.push({ label: 'Stock Awards', value: e.stockAwardsValue });
             if (e.optionAwardsValue) items.push({ label: 'Option Awards', value: e.optionAwardsValue });
             if (e.allOtherComp) items.push({ label: 'Other Compensation', value: e.allOtherComp });
+            if (hasEquityAwards) items.push({ label: 'Equity Awards', value: 'See Below', isText: true });
 
             return `
                 <div class="executive-card">
@@ -667,7 +666,7 @@
                         ${items.map(i => `
                             <div class="comp-item">
                                 <span class="label">${i.label}</span>
-                                <span class="value">${formatCurrency(i.value, cur)}</span>
+                                <span class="value">${i.isText ? i.value : formatCurrency(i.value, cur)}</span>
                             </div>
                         `).join('')}
                         ${e.stockAwardsUnits ? `
