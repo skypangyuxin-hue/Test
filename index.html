@@ -611,6 +611,7 @@
                                             <th>Grant Date</th>
                                             <th>Exercise Price</th>
                                             <th>Price at Grant</th>
+                                            <th>Price at Year End</th>
                                             <th>Expiry</th>
                                         </tr>
                                     </thead>
@@ -622,6 +623,7 @@
                                                 <td>${x.grantDate}</td>
                                                 <td>${x.exercisePrice ? 'C$' + x.exercisePrice.toFixed(2) : '-'}</td>
                                                 <td>C$${x.priceAtGrant.toFixed(2)}</td>
+                                                <td>C$${x.priceAtYearEnd.toFixed(2)}</td>
                                                 <td>${x.expiry}</td>
                                             </tr>
                                         `).join('')}
