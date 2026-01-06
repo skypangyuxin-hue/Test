@@ -4,518 +4,327 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Executive Compensation Dashboard | OG Advisory Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background: #f5f0eb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #d4cdc4;
             min-height: 100vh;
             color: #1a1a1a;
         }
 
         .header {
-            background: #fff;
-            padding: 15px 40px;
-            border-bottom: 1px solid #e0d9d1;
+            background: #f5f1ec;
+            padding: 18px 40px;
+            border-bottom: 1px solid #c9c2b8;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .logo-section { display: flex; align-items: center; gap: 20px; }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+        .logo svg { height: 36px; width: auto; }
 
-        .logo svg {
-            height: 40px;
-            width: auto;
-        }
-
-        .header-title {
-            border-left: 1px solid #e0d9d1;
-            padding-left: 20px;
-        }
-
+        .header-title { border-left: 1px solid #c9c2b8; padding-left: 20px; }
         .header-title h1 {
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             color: #1a1a1a;
             letter-spacing: 0.5px;
-        }
-
-        .header-title p {
-            color: #888;
-            font-size: 0.75rem;
-            margin-top: 2px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
+        .nav-links { display: flex; gap: 30px; }
         .nav-links a {
             color: #666;
             text-decoration: none;
             font-size: 0.85rem;
+            font-weight: 500;
             transition: color 0.3s;
         }
+        .nav-links a:hover { color: #1a1a1a; }
 
-        .nav-links a:hover {
-            color: #1a1a1a;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-
-        /* Financial Summary Table */
         .financial-summary {
-            background: #fff;
+            background: #f5f1ec;
             border-radius: 8px;
             padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid #c9c2b8;
         }
 
-        .financial-summary h2 {
-            font-size: 0.85rem;
+        .section-header {
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-            margin-bottom: 20px;
-            font-weight: 500;
+            letter-spacing: 1.5px;
+            color: #5a534a;
+            margin-bottom: 18px;
+            font-weight: 700;
         }
 
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .summary-table { width: 100%; border-collapse: collapse; }
         .summary-table th {
             text-align: left;
             padding: 12px 15px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #888;
-            font-weight: 500;
-            border-bottom: 2px solid #f5f0eb;
-        }
-
-        .summary-table td {
-            padding: 15px;
-            border-bottom: 1px solid #f5f0eb;
-            font-size: 0.9rem;
-        }
-
-        .summary-table tr:hover td {
-            background: #faf8f5;
-        }
-
-        .summary-table .ticker {
+            color: #7a7267;
             font-weight: 600;
-            color: #1a1a1a;
+            border-bottom: 2px solid #c9c2b8;
         }
-
-        .summary-table .negative {
-            color: #c0392b;
+        .summary-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #e0dbd4;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
-
-        .summary-table .positive {
-            color: #27ae60;
-        }
+        .summary-table tr:hover td { background: #ebe7e1; }
+        .summary-table .ticker { font-weight: 700; color: #1a1a1a; }
+        .summary-table .negative { color: #b33a3a; }
+        .summary-table .positive { color: #2d7a4f; }
 
         .company-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
         }
 
         .company-card {
-            background: #fff;
-            border: 1px solid #e0d9d1;
+            background: #f5f1ec;
+            border: 1px solid #c9c2b8;
             border-radius: 8px;
-            padding: 20px;
+            padding: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
         }
-
         .company-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            border-color: #c9a962;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            border-color: #a08c6d;
         }
-
         .company-card.active {
-            border-color: #c9a962;
-            background: linear-gradient(135deg, #fff 0%, #faf8f5 100%);
-            box-shadow: 0 5px 20px rgba(201, 169, 98, 0.2);
+            border-color: #a08c6d;
+            background: linear-gradient(135deg, #f5f1ec 0%, #ebe7e1 100%);
+            box-shadow: 0 5px 20px rgba(160, 140, 109, 0.25);
         }
-
-        .company-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-
-        .company-card .currency {
-            font-size: 0.7rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .company-card .total-comp {
-            font-size: 0.9rem;
-            color: #c9a962;
-            font-weight: 600;
-        }
+        .company-card h3 { font-size: 1.2rem; margin-bottom: 4px; color: #1a1a1a; font-weight: 700; }
+        .company-card .currency { font-size: 0.65rem; color: #7a7267; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; }
+        .company-card .total-comp { font-size: 0.85rem; color: #a08c6d; font-weight: 700; }
 
         .detail-panel {
-            background: #fff;
-            border: 1px solid #e0d9d1;
+            background: #f5f1ec;
+            border: 1px solid #c9c2b8;
             border-radius: 8px;
-            padding: 30px;
+            padding: 28px;
             display: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
+        .detail-panel.active { display: block; animation: fadeIn 0.4s ease; }
 
-        .detail-panel.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .detail-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #f5f0eb;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e0dbd4;
         }
+        .detail-header h2 { font-size: 1.6rem; color: #1a1a1a; font-weight: 700; }
+        .detail-header .full-name { color: #7a7267; font-size: 0.85rem; margin-top: 3px; font-weight: 500; }
 
-        .detail-header h2 {
-            font-size: 1.8rem;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-
-        .detail-header .full-name {
-            color: #888;
-            font-size: 0.85rem;
-            margin-top: 3px;
-        }
-
-        .year-tabs {
-            display: flex;
-            gap: 8px;
-        }
-
+        .year-tabs { display: flex; gap: 8px; }
         .year-tab {
-            padding: 8px 18px;
-            background: #f5f0eb;
-            border: 1px solid #e0d9d1;
-            border-radius: 20px;
+            padding: 8px 16px;
+            background: #e8e3dc;
+            border: 1px solid #c9c2b8;
+            border-radius: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #666;
-            font-size: 0.85rem;
+            color: #5a534a;
+            font-size: 0.8rem;
             font-family: inherit;
+            font-weight: 600;
         }
+        .year-tab:hover { background: #ddd7ce; color: #1a1a1a; }
+        .year-tab.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
 
-        .year-tab:hover {
-            background: #ebe5dd;
-            color: #1a1a1a;
-        }
-
-        .year-tab.active {
-            background: #1a1a1a;
-            border-color: #1a1a1a;
-            color: #fff;
-        }
-
-        /* Company Financials Section */
         .company-financials {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #faf8f5;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding: 18px;
+            background: #ebe7e1;
             border-radius: 8px;
+            border: 1px solid #ddd7ce;
         }
-
-        .financial-item {
-            text-align: center;
-        }
-
-        .financial-item .value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .financial-item .value.negative {
-            color: #c0392b;
-        }
-
-        .financial-item .label {
-            font-size: 0.7rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
+        .financial-item { text-align: center; }
+        .financial-item .value { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
+        .financial-item .value.negative { color: #b33a3a; }
+        .financial-item .label { font-size: 0.65rem; color: #7a7267; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 600; }
 
         .summary-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
         }
-
         .stat-card {
-            background: #faf8f5;
-            border: 1px solid #e0d9d1;
+            background: #ebe7e1;
+            border: 1px solid #ddd7ce;
             border-radius: 8px;
-            padding: 18px;
+            padding: 16px;
             text-align: center;
         }
-
-        .stat-card .stat-value {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #c9a962;
-        }
-
-        .stat-card .stat-label {
-            color: #888;
-            font-size: 0.7rem;
-            margin-top: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .stat-card .stat-value { font-size: 1.2rem; font-weight: 700; color: #a08c6d; }
+        .stat-card .stat-label { color: #7a7267; font-size: 0.65rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 
         .executives-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
         }
 
         .executive-card {
-            background: #faf8f5;
-            border: 1px solid #e0d9d1;
+            background: #ebe7e1;
+            border: 1px solid #ddd7ce;
             border-radius: 8px;
-            padding: 20px;
+            padding: 18px;
             transition: all 0.3s ease;
         }
+        .executive-card:hover { border-color: #a08c6d; box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
 
-        .executive-card:hover {
-            border-color: #c9a962;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
-        }
-
-        .executive-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
+        .executive-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
         .executive-avatar {
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #1a1a1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 700;
             color: #fff;
         }
+        .executive-info h4 { font-size: 0.95rem; color: #1a1a1a; margin-bottom: 2px; font-weight: 700; }
+        .executive-info .role { font-size: 0.7rem; color: #7a7267; font-weight: 500; }
 
-        .executive-info h4 {
-            font-size: 1rem;
-            color: #1a1a1a;
-            margin-bottom: 2px;
-            font-weight: 600;
-        }
-
-        .executive-info .role {
-            font-size: 0.75rem;
-            color: #888;
-        }
-
-        .comp-breakdown {
-            display: grid;
-            gap: 8px;
-        }
-
+        .comp-breakdown { display: grid; gap: 6px; }
         .comp-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
-            background: #fff;
-            border-radius: 6px;
+            padding: 7px 10px;
+            background: #f5f1ec;
+            border-radius: 5px;
         }
-
-        .comp-item .label {
-            color: #888;
-            font-size: 0.8rem;
-        }
-
-        .comp-item .value {
-            color: #1a1a1a;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .comp-item.total {
-            background: #1a1a1a;
-            margin-top: 5px;
-        }
-
-        .comp-item.total .label {
-            color: #c9a962;
-            font-weight: 500;
-        }
-
-        .comp-item.total .value {
-            color: #fff;
-            font-size: 0.95rem;
-        }
+        .comp-item .label { color: #7a7267; font-size: 0.75rem; font-weight: 500; }
+        .comp-item .value { color: #1a1a1a; font-weight: 700; font-size: 0.8rem; }
+        .comp-item.total { background: #1a1a1a; margin-top: 4px; }
+        .comp-item.total .label { color: #a08c6d; font-weight: 600; }
+        .comp-item.total .value { color: #fff; font-size: 0.9rem; }
 
         .notes {
-            margin-top: 12px;
-            padding: 10px 12px;
-            background: #fff8e6;
-            border-left: 3px solid #c9a962;
-            border-radius: 0 6px 6px 0;
-            font-size: 0.75rem;
-            color: #8b7355;
+            margin-top: 10px;
+            padding: 9px 11px;
+            background: #f8f3e8;
+            border-left: 3px solid #a08c6d;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.7rem;
+            color: #7a6b55;
+            font-weight: 500;
         }
 
         .equity-section {
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid #e0d9d1;
+            margin-top: 25px;
+            padding-top: 22px;
+            border-top: 1px solid #ddd7ce;
         }
 
-        .equity-section h3 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            color: #888;
-            font-weight: 500;
+        .equity-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 12px 16px;
+            background: #ebe7e1;
+            border: 1px solid #ddd7ce;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
-
-        .equity-table {
-            width: 100%;
-            border-collapse: collapse;
+        .equity-toggle:hover { background: #e3ded6; }
+        .equity-toggle h3 {
             font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #5a534a;
+            font-weight: 700;
+            margin: 0;
         }
+        .equity-toggle .arrow {
+            font-size: 1.2rem;
+            color: #7a7267;
+            transition: transform 0.3s ease;
+        }
+        .equity-toggle.expanded .arrow { transform: rotate(180deg); }
 
+        .equity-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .equity-content.visible { display: block; }
+
+        .equity-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         .equity-table th {
             text-align: left;
-            padding: 10px 12px;
-            background: #faf8f5;
-            color: #888;
-            font-weight: 500;
-            font-size: 0.7rem;
+            padding: 9px 10px;
+            background: #e8e3dc;
+            color: #7a7267;
+            font-weight: 600;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 1px solid #e0d9d1;
+            border-bottom: 1px solid #ddd7ce;
         }
-
-        .equity-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #f5f0eb;
-            color: #1a1a1a;
-        }
-
-        .equity-table tr:hover td {
-            background: #faf8f5;
-        }
+        .equity-table td { padding: 9px 10px; border-bottom: 1px solid #e8e3dc; color: #1a1a1a; font-weight: 500; }
+        .equity-table tr:hover td { background: #ebe7e1; }
 
         .badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.65rem;
-            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
+        .badge.option { background: #dbeef5; color: #2171a5; }
+        .badge.rsu { background: #eedff5; color: #7a3d9e; }
 
-        .badge.option {
-            background: #e8f4f8;
-            color: #2980b9;
-        }
-
-        .badge.rsu {
-            background: #f3e8f8;
-            color: #8e44ad;
-        }
-
-        .welcome-message {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
-
-        .welcome-message h3 {
-            font-size: 1.3rem;
-            color: #1a1a1a;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .section-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
+        .welcome-message { text-align: center; padding: 50px 20px; color: #7a7267; }
+        .welcome-message h3 { font-size: 1.2rem; color: #1a1a1a; margin-bottom: 8px; font-weight: 600; }
 
         .additional-info {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #fff8e6;
-            border-left: 3px solid #c9a962;
+            margin-bottom: 18px;
+            padding: 14px;
+            background: #f8f3e8;
+            border-left: 3px solid #a08c6d;
             border-radius: 0 6px 6px 0;
-            font-size: 0.85rem;
-            color: #8b7355;
+            font-size: 0.8rem;
+            color: #7a6b55;
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -534,14 +343,13 @@
     <header class="header">
         <div class="logo-section">
             <div class="logo">
-                <svg viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
-                    <text x="0" y="40" font-family="Helvetica Neue, Arial, sans-serif" font-size="48" font-weight="700" fill="#1a1a1a">OG</text>
-                    <circle cx="95" cy="38" r="6" fill="#e67e22"/>
+                <svg viewBox="0 0 85 45" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="38" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="46" font-weight="700" fill="#1a1a1a">OG</text>
+                    <circle cx="77" cy="36" r="5.5" fill="#e67e22"/>
                 </svg>
             </div>
             <div class="header-title">
-                <h1>EXECUTIVE COMPENSATION DASHBOARD</h1>
-                <p>Crypto Mining Companies Analysis</p>
+                <h1>Executive Compensation Dashboard</h1>
             </div>
         </div>
         <nav class="nav-links">
@@ -551,25 +359,23 @@
     </header>
 
     <div class="container">
-        <!-- Financial Summary Table -->
         <div class="financial-summary">
-            <h2>Financial Overview (USD mm, LTM)</h2>
+            <h2 class="section-header">Financial Overview (USD mm)</h2>
             <table class="summary-table">
                 <thead>
                     <tr>
                         <th>Ticker</th>
                         <th>Market Cap</th>
-                        <th>Total Revenues</th>
-                        <th>EBITDA</th>
-                        <th>Net Income</th>
+                        <th>Total Revenues (LTM)</th>
+                        <th>EBITDA (LTM)</th>
+                        <th>Net Income (LTM)</th>
                     </tr>
                 </thead>
-                <tbody id="summaryTableBody">
-                </tbody>
+                <tbody id="summaryTableBody"></tbody>
             </table>
         </div>
 
-        <p class="section-title">Select a Company</p>
+        <p class="section-header">Select a Company</p>
         <div class="company-grid" id="companyGrid"></div>
 
         <div class="detail-panel" id="detailPanel">
@@ -582,29 +388,27 @@
     </div>
 
     <script>
-        // Financial Data (in USD millions)
+        // Financial Data (in USD millions) - Updated from spreadsheet
         const financialData = {
-            LMFA: { marketCap: null, revenue: 9, ebitda: null, netIncome: -7 },
-            BTBT: { marketCap: 715, revenue: 109, ebitda: 182, netIncome: 137 },
-            HIVE: { marketCap: 709, revenue: 193, ebitda: 109, netIncome: 34 },
-            DMG: { marketCap: 40, revenue: 34, ebitda: 0, netIncome: -22 },
-            Phoenix: { marketCap: 1645, revenue: 142, ebitda: 197, netIncome: -292 }
+            LMFA: { marketCap: 7, revenue: 8, ebitda: null, netIncome: -7 },
+            BTBT: { marketCap: 715, revenue: 106, ebitda: 162, netIncome: 137 },
+            HIVE: { marketCap: 709, revenue: 193, ebitda: 106, netIncome: 34 },
+            DMG: { marketCap: 40, revenue: 34, ebitda: 6, netIncome: -7 },
+            PHX: { marketCap: 1645, revenue: 142, ebitda: 197, netIncome: -232 }
         };
 
-        // Executive Compensation Data
+        // Executive Compensation Data - Updated per requirements
         const compensationData = {
             LMFA: {
                 name: "LMFA", fullName: "LM Funding America, Inc.", currency: "USD",
                 years: {
                     2024: { executives: [
                         { name: "Bruce Rodgers", role: "Chairman, CEO & President", salary: 825000, cashBonus: 473750, allOtherComp: 26561, reportedTotal: 1305311, notes: "All other comp includes insurance premiums." },
-                        { name: "Richard Russell", role: "Chief Financial Officer", salary: 550000, cashBonus: 275000, allOtherComp: 53238, reportedTotal: 878238 },
-                        { name: "Ryan Duran", role: "VP Operations / President US Digital Mining", salary: 196346, cashBonus: 93000, allOtherComp: 51012, reportedTotal: 340358 }
+                        { name: "Richard Russell", role: "Chief Financial Officer", salary: 550000, cashBonus: 275000, allOtherComp: 53238, reportedTotal: 878238 }
                     ]},
                     2023: { executives: [
                         { name: "Bruce Rodgers", role: "Chairman, CEO & President", salary: 825000, cashBonus: 0, stockAwardsValue: 488345, optionAwardsValue: 356503, allOtherComp: 24860, reportedTotal: 1694708 },
-                        { name: "Richard Russell", role: "Chief Financial Officer", salary: 550000, cashBonus: 0, stockAwardsValue: 488345, optionAwardsValue: 356503, allOtherComp: 48467, reportedTotal: 1443315 },
-                        { name: "Ryan Duran", role: "VP Operations / President US Digital Mining", salary: 192500, cashBonus: 0, stockAwardsValue: 122086, optionAwardsValue: 89126, allOtherComp: 40217, reportedTotal: 443929 }
+                        { name: "Richard Russell", role: "Chief Financial Officer", salary: 550000, cashBonus: 0, stockAwardsValue: 488345, optionAwardsValue: 356503, allOtherComp: 48467, reportedTotal: 1443315 }
                     ]}
                 }
             },
@@ -629,16 +433,12 @@
                     2024: { executives: [
                         { name: "Aydin Kilic", role: "President & CEO", salary: 0, annualIncentive: 162400, stockAwardsValue: 859564, optionAwardsValue: 447950, allOtherComp: 312000, reportedTotal: 1781914 },
                         { name: "Darcy Daubaras", role: "CFO", salary: 312000, annualIncentive: 183600, optionAwardsValue: 447950, allOtherComp: 101256, reportedTotal: 1044806 },
-                        { name: "Frank Holmes", role: "Executive Chairman", salary: 0, optionAwardsValue: 119453, allOtherComp: 217000, reportedTotal: 336453, notes: "Option-based awards only in 2024." }
+                        { name: "Frank Holmes", role: "Executive Chairman", salary: 0, optionAwardsValue: 119453, allOtherComp: 217000, reportedTotal: 336453 }
                     ]},
                     2023: { executives: [
                         { name: "Aydin Kilic", role: "President & CEO", salary: 0, annualIncentive: 126600, stockAwardsValue: 452160, optionAwardsValue: 353529, allOtherComp: 312000, reportedTotal: 1244289 },
                         { name: "Darcy Daubaras", role: "CFO", salary: 311000, annualIncentive: 76600, stockAwardsValue: 594000, allOtherComp: 99374, reportedTotal: 1080974 },
                         { name: "Frank Holmes", role: "Executive Chairman", salary: 0, stockAwardsValue: 6876000, allOtherComp: 225921, reportedTotal: 7101921 }
-                    ]},
-                    2022: { executives: [
-                        { name: "Aydin Kilic", role: "President & CEO", salary: 0, annualIncentive: 61500, stockAwardsValue: 148000, optionAwardsValue: 3033361, allOtherComp: 232258, reportedTotal: 3181361, notes: "Reported total does not reconcile; variance flagged." },
-                        { name: "Darcy Daubaras", role: "CFO", salary: 263750, annualIncentive: 112500, allOtherComp: 23437, reportedTotal: 399687 }
                     ]}
                 }
             },
@@ -647,193 +447,291 @@
                 years: {
                     2024: { executives: [
                         { name: "Sheldon Bennett", role: "CEO & Director", salary: 387936, cashBonus: 617100, reportedTotal: 1005036 },
-                        { name: "Steven Eliscu", role: "COO", salary: 274035, reportedTotal: 274035 },
-                        { name: "Adrian Glover", role: "CTO", salary: 182046, reportedTotal: 182046 },
-                        { name: "Heather Sim", role: "CFO & Director", salary: 42000, allOtherComp: 2000, reportedTotal: 44000, notes: "Committee fees included." },
-                        { name: "J.D. Abouchar", role: "Director", salary: 42000, allOtherComp: 23000, reportedTotal: 65000, notes: "Committee fees included." },
-                        { name: "John Place", role: "Director", salary: 50000, allOtherComp: 8000, reportedTotal: 58000, notes: "Committee fees included." }
+                        { name: "Heather Sim", role: "CFO & Director", salary: 42000, allOtherComp: 2000, reportedTotal: 44000, notes: "Committee fees included." }
                     ]},
                     2023: { executives: [
                         { name: "Sheldon Bennett", role: "CEO & Director", salary: 338552, cashBonus: 440000, reportedTotal: 778552 },
-                        { name: "Steven Eliscu", role: "COO", salary: 273934, cashBonus: 121680, reportedTotal: 395614 },
-                        { name: "Adrian Glover", role: "CTO", salary: 185507, reportedTotal: 185507 },
-                        { name: "Heather Sim", role: "CFO & Director", salary: 18200, reportedTotal: 18200 },
-                        { name: "J.D. Abouchar", role: "Director", salary: 42000, allOtherComp: 14000, reportedTotal: 56000 },
-                        { name: "John Place", role: "Director", salary: 42000, reportedTotal: 42000 }
+                        { name: "Heather Sim", role: "CFO & Director", salary: 18200, reportedTotal: 18200 }
                     ]}
                 },
                 equityAwards: {
                     "Sheldon Bennett": [
                         { type: "Stock Options", units: 375000, grantDate: "2022-12-22", exercisePrice: 0.18, priceAtGrant: 0.17, priceAtYearEnd: 0.27, expiry: "2027-12-22" },
                         { type: "Stock Options", units: 375000, grantDate: "2023-03-31", exercisePrice: 0.32, priceAtGrant: 0.31, priceAtYearEnd: 0.27, expiry: "2028-03-31" },
-                        { type: "Stock Options", units: 500000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.315, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
-                        { type: "Stock Options", units: 400000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.285, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
-                        { type: "Stock Options", units: 400000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.485, expiry: "2028-12-20" },
-                        { type: "Stock Options", units: 400000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.485, expiry: "2029-03-20" },
-                        { type: "Stock Options", units: 500000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.6, priceAtYearEnd: 0.485, expiry: "2029-06-05" },
-                        { type: "RSUs", units: 1500000, grantDate: "2024-09-19", priceAtGrant: 0.46, priceAtYearEnd: 0.485, expiry: "2025-09-19" }
+                        { type: "Stock Options", units: 500000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.32, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
+                        { type: "Stock Options", units: 400000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.29, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
+                        { type: "Stock Options", units: 400000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.49, expiry: "2028-12-20" },
+                        { type: "Stock Options", units: 400000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.49, expiry: "2029-03-20" },
+                        { type: "Stock Options", units: 500000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.60, priceAtYearEnd: 0.49, expiry: "2029-06-05" },
+                        { type: "RSUs", units: 1500000, grantDate: "2024-09-19", exercisePrice: null, priceAtGrant: 0.46, priceAtYearEnd: 0.49, expiry: "2025-09-19" }
                     ],
                     "Heather Sim": [
-                        { type: "Stock Options", units: 50000, grantDate: "2023-04-26", exercisePrice: 0.31, priceAtGrant: 0.3, priceAtYearEnd: 0.27, expiry: "2028-04-26" },
-                        { type: "Stock Options", units: 150000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.315, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
-                        { type: "Stock Options", units: 50000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.285, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
-                        { type: "Stock Options", units: 50000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.485, expiry: "2028-12-20" },
-                        { type: "Stock Options", units: 50000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.485, expiry: "2029-03-20" },
-                        { type: "Stock Options", units: 50000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.6, priceAtYearEnd: 0.485, expiry: "2029-06-05" },
-                        { type: "RSUs", units: 50000, grantDate: "2024-09-19", priceAtGrant: 0.46, priceAtYearEnd: 0.485, expiry: "2025-09-19" }
+                        { type: "Stock Options", units: 50000, grantDate: "2023-04-26", exercisePrice: 0.31, priceAtGrant: 0.30, priceAtYearEnd: 0.27, expiry: "2028-04-26" },
+                        { type: "Stock Options", units: 150000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.32, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
+                        { type: "Stock Options", units: 50000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.29, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.49, expiry: "2028-12-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.49, expiry: "2029-03-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.60, priceAtYearEnd: 0.49, expiry: "2029-06-05" },
+                        { type: "RSUs", units: 50000, grantDate: "2024-09-19", exercisePrice: null, priceAtGrant: 0.46, priceAtYearEnd: 0.49, expiry: "2025-09-19" }
                     ]
                 }
             },
-            Phoenix: {
-                name: "Phoenix", fullName: "Phoenix Group PLC", currency: "USD",
+            PHX: {
+                name: "PHX", fullName: "Phoenix Group PLC", currency: "USD",
                 years: {
-                    2024: { executives: [{ name: "Key Management Personnel", role: "Total (Detail not disclosed)", reportedTotal: 3750000, notes: "Aggregate compensation for key management personnel." }], additionalInfo: "Directors' Fee: 30,000 AED per board meeting" },
-                    2023: { executives: [{ name: "Key Management Personnel", role: "Aggregate", reportedTotal: 2201000, notes: "Aggregate compensation for key management personnel." }] }
+                    2024: {
+                        executives: [
+                            { name: "Key Management Personnel", role: "Total (Detail not disclosed)", reportedTotal: 3750000, notes: "Aggregate compensation for key management personnel." }
+                        ],
+                        boardDirectors: [
+                            { name: "Board Director 1", role: "Director" },
+                            { name: "Board Director 2", role: "Director" },
+                            { name: "Board Director 3", role: "Director" },
+                            { name: "Board Director 4", role: "Director" },
+                            { name: "Board Director 5", role: "Director" }
+                        ],
+                        additionalInfo: "30,000 AED per board meeting fee (per meeting)"
+                    },
+                    2023: {
+                        executives: [
+                            { name: "Key Management Personnel", role: "Aggregate", reportedTotal: 2201000, notes: "Aggregate compensation for key management personnel." }
+                        ]
+                    }
                 }
             }
         };
 
-        function formatCurrency(amount, currency) {
-            if (amount === undefined || amount === null) return '-';
-            return (currency === 'CAD' ? 'C$' : '$') + amount.toLocaleString('en-US');
+        function formatCurrency(a, c) {
+            if (a === undefined || a === null) return '-';
+            return (c === 'CAD' ? 'C$' : '$') + a.toLocaleString('en-US');
         }
 
-        function formatMillions(value) {
-            if (value === null || value === undefined) return '-';
-            if (value < 0) return `(${Math.abs(value)})`;
-            return value.toString();
-        }
+        function getInitials(n) { return n.split(' ').map(x => x[0]).join('').substring(0, 2); }
+        function getTotalComp(c, y) { const d = compensationData[c].years[y]; return d ? d.executives.reduce((s, e) => s + (e.reportedTotal || 0), 0) : 0; }
+        function getLatestYear(c) { return Math.max(...Object.keys(compensationData[c].years).map(Number)); }
 
-        function getInitials(name) { return name.split(' ').map(n => n[0]).join('').substring(0, 2); }
-        function getTotalComp(company, year) { const d = compensationData[company].years[year]; return d ? d.executives.reduce((s, e) => s + (e.reportedTotal || 0), 0) : 0; }
-        function getLatestYear(company) { return Math.max(...Object.keys(compensationData[company].years).map(Number)); }
-
-        // Render Financial Summary Table
         function renderSummaryTable() {
-            const tbody = document.getElementById('summaryTableBody');
-            const order = ['LMFA', 'BTBT', 'HIVE', 'DMG', 'Phoenix'];
-
-            tbody.innerHTML = order.map(ticker => {
-                const fin = financialData[ticker];
+            const t = document.getElementById('summaryTableBody');
+            const o = ['LMFA', 'BTBT', 'HIVE', 'DMG', 'PHX'];
+            t.innerHTML = o.map(k => {
+                const f = financialData[k];
                 return `<tr>
-                    <td class="ticker">${ticker}</td>
-                    <td>${fin.marketCap ? '$' + fin.marketCap : '-'}</td>
-                    <td>$${fin.revenue}</td>
-                    <td>${fin.ebitda !== null ? '$' + fin.ebitda : '-'}</td>
-                    <td class="${fin.netIncome < 0 ? 'negative' : 'positive'}">${fin.netIncome < 0 ? '($' + Math.abs(fin.netIncome) + ')' : '$' + fin.netIncome}</td>
+                    <td class="ticker">${k}</td>
+                    <td>${f.marketCap ? '$' + f.marketCap : '-'}</td>
+                    <td>$${f.revenue}</td>
+                    <td>${f.ebitda !== null ? '$' + f.ebitda : '-'}</td>
+                    <td class="${f.netIncome < 0 ? 'negative' : 'positive'}">${f.netIncome < 0 ? '($' + Math.abs(f.netIncome) + ')' : '$' + f.netIncome}</td>
                 </tr>`;
             }).join('');
         }
 
         function renderCompanyCards() {
-            const grid = document.getElementById('companyGrid');
-            grid.innerHTML = '';
-            const order = ['LMFA', 'BTBT', 'HIVE', 'DMG', 'Phoenix'];
-
-            order.forEach(company => {
-                const data = compensationData[company], latestYear = getLatestYear(company), totalComp = getTotalComp(company, latestYear);
+            const g = document.getElementById('companyGrid');
+            const o = ['LMFA', 'BTBT', 'HIVE', 'DMG', 'PHX'];
+            g.innerHTML = '';
+            o.forEach(c => {
+                const d = compensationData[c], y = getLatestYear(c), t = getTotalComp(c, y);
                 const card = document.createElement('div');
                 card.className = 'company-card';
-                card.dataset.company = company;
-                card.innerHTML = `<h3>${data.name}</h3><div class="currency">${data.currency}</div><div class="total-comp">FY${latestYear}: ${formatCurrency(totalComp, data.currency)}</div>`;
-                card.addEventListener('click', () => selectCompany(company));
-                grid.appendChild(card);
+                card.dataset.company = c;
+                card.innerHTML = `<h3>${d.name}</h3><div class="currency">${d.currency}</div><div class="total-comp">FY${y}: ${formatCurrency(t, d.currency)}</div>`;
+                card.addEventListener('click', () => selectCompany(c));
+                g.appendChild(card);
             });
         }
 
         let currentCompany = null, currentYear = null;
 
-        function selectCompany(company) {
-            currentCompany = company;
-            currentYear = getLatestYear(company);
-            document.querySelectorAll('.company-card').forEach(card => card.classList.toggle('active', card.dataset.company === company));
+        function selectCompany(c) {
+            currentCompany = c;
+            currentYear = getLatestYear(c);
+            document.querySelectorAll('.company-card').forEach(card => card.classList.toggle('active', card.dataset.company === c));
             document.getElementById('detailPanel').classList.add('active');
             document.getElementById('welcomeMessage').style.display = 'none';
             renderCompanyDetail();
         }
 
         function renderCompanyDetail() {
-            const company = compensationData[currentCompany], yearData = company.years[currentYear];
-            const fin = financialData[currentCompany];
-            const years = Object.keys(company.years).map(Number).sort((a, b) => b - a);
-            const totalComp = yearData.executives.reduce((s, e) => s + (e.reportedTotal || 0), 0);
-            const avgComp = totalComp / yearData.executives.length;
-            const maxComp = Math.max(...yearData.executives.map(e => e.reportedTotal || 0));
+            const c = compensationData[currentCompany], y = c.years[currentYear];
+            const f = financialData[currentCompany];
+            const yrs = Object.keys(c.years).map(Number).sort((a, b) => b - a);
+            const total = y.executives.reduce((s, e) => s + (e.reportedTotal || 0), 0);
+            const avg = total / y.executives.length;
+            const max = Math.max(...y.executives.map(e => e.reportedTotal || 0));
 
-            let html = `
+            let h = `
                 <div class="detail-header">
                     <div>
-                        <h2>${company.name}</h2>
-                        <p class="full-name">${company.fullName}</p>
+                        <h2>${c.name}</h2>
+                        <p class="full-name">${c.fullName}</p>
                     </div>
                     <div class="year-tabs">
-                        ${years.map(y => `<button class="year-tab ${y === currentYear ? 'active' : ''}" onclick="changeYear(${y})">FY ${y}</button>`).join('')}
+                        ${yrs.map(yr => `<button class="year-tab ${yr === currentYear ? 'active' : ''}" onclick="changeYear(${yr})">FY ${yr}</button>`).join('')}
                     </div>
                 </div>
 
                 <div class="company-financials">
                     <div class="financial-item">
-                        <div class="value">${fin.marketCap ? '$' + fin.marketCap + 'M' : '-'}</div>
+                        <div class="value">${f.marketCap ? '$' + f.marketCap + 'M' : '-'}</div>
                         <div class="label">Market Cap</div>
                     </div>
                     <div class="financial-item">
-                        <div class="value">$${fin.revenue}M</div>
+                        <div class="value">$${f.revenue}M</div>
                         <div class="label">Revenue (LTM)</div>
                     </div>
                     <div class="financial-item">
-                        <div class="value">${fin.ebitda !== null ? '$' + fin.ebitda + 'M' : '-'}</div>
+                        <div class="value">${f.ebitda !== null ? '$' + f.ebitda + 'M' : '-'}</div>
                         <div class="label">EBITDA (LTM)</div>
                     </div>
                     <div class="financial-item">
-                        <div class="value ${fin.netIncome < 0 ? 'negative' : ''}">${fin.netIncome < 0 ? '($' + Math.abs(fin.netIncome) + 'M)' : '$' + fin.netIncome + 'M'}</div>
+                        <div class="value ${f.netIncome < 0 ? 'negative' : ''}">${f.netIncome < 0 ? '($' + Math.abs(f.netIncome) + 'M)' : '$' + f.netIncome + 'M'}</div>
                         <div class="label">Net Income (LTM)</div>
                     </div>
                 </div>
 
                 <div class="summary-stats">
                     <div class="stat-card">
-                        <div class="stat-value">${formatCurrency(totalComp, company.currency)}</div>
+                        <div class="stat-value">${formatCurrency(total, c.currency)}</div>
                         <div class="stat-label">Total Compensation</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">${formatCurrency(Math.round(avgComp), company.currency)}</div>
+                        <div class="stat-value">${formatCurrency(Math.round(avg), c.currency)}</div>
                         <div class="stat-label">Average per Executive</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">${yearData.executives.length}</div>
+                        <div class="stat-value">${y.executives.length}</div>
                         <div class="stat-label">Executives</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">${formatCurrency(maxComp, company.currency)}</div>
+                        <div class="stat-value">${formatCurrency(max, c.currency)}</div>
                         <div class="stat-label">Highest Compensation</div>
                     </div>
                 </div>
 
-                ${yearData.additionalInfo ? `<div class="additional-info">${yearData.additionalInfo}</div>` : ''}
+                ${y.additionalInfo ? `<div class="additional-info">${y.additionalInfo}</div>` : ''}
 
-                <p class="section-title">Executive Compensation Breakdown</p>
-                <div class="executives-grid">${yearData.executives.map(e => renderExecutiveCard(e, company.currency)).join('')}</div>
+                <p class="section-header">Executive Compensation Breakdown</p>
+                <div class="executives-grid">${y.executives.map(e => renderExecutiveCard(e, c.currency)).join('')}</div>
             `;
 
-            if (currentCompany === 'DMG' && company.equityAwards) {
-                html += `<div class="equity-section"><h3>Equity Awards Details</h3>${Object.entries(company.equityAwards).map(([name, awards]) => `<h4 style="margin:20px 0 15px;color:#1a1a1a;font-size:0.95rem;">${name}</h4><table class="equity-table"><thead><tr><th>Type</th><th>Units</th><th>Grant Date</th><th>Exercise Price</th><th>Price at Grant</th><th>Year End Price</th><th>Expiry</th></tr></thead><tbody>${awards.map(a => `<tr><td><span class="badge ${a.type === 'RSUs' ? 'rsu' : 'option'}">${a.type}</span></td><td>${a.units.toLocaleString()}</td><td>${a.grantDate}</td><td>${a.exercisePrice ? 'C$' + a.exercisePrice.toFixed(2) : '-'}</td><td>C$${a.priceAtGrant.toFixed(2)}</td><td>C$${a.priceAtYearEnd.toFixed(2)}</td><td>${a.expiry}</td></tr>`).join('')}</tbody></table>`).join('')}</div>`;
+            // Add Board Directors for Phoenix
+            if (currentCompany === 'PHX' && y.boardDirectors) {
+                h += `
+                    <div style="margin-top: 25px;">
+                        <p class="section-header">Board of Directors (${y.boardDirectors.length} Members)</p>
+                        <div class="executives-grid">
+                            ${y.boardDirectors.map((d, i) => `
+                                <div class="executive-card">
+                                    <div class="executive-header">
+                                        <div class="executive-avatar">D${i+1}</div>
+                                        <div class="executive-info">
+                                            <h4>Director ${i+1}</h4>
+                                            <div class="role">${d.role}</div>
+                                        </div>
+                                    </div>
+                                    <div class="notes">Fee: 30,000 AED per board meeting</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
             }
-            document.getElementById('companyDetail').innerHTML = html;
+
+            // Add collapsible equity awards for DMG
+            if (currentCompany === 'DMG' && c.equityAwards) {
+                h += `
+                    <div class="equity-section">
+                        <div class="equity-toggle" onclick="toggleEquity()">
+                            <h3>Equity Awards Details</h3>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="equity-content" id="equityContent">
+                            ${Object.entries(c.equityAwards).map(([n, a]) => `
+                                <h4 style="margin:18px 0 12px;color:#1a1a1a;font-size:0.9rem;font-weight:700;">${n}</h4>
+                                <table class="equity-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Units</th>
+                                            <th>Grant Date</th>
+                                            <th>Exercise Price</th>
+                                            <th>Price at Grant</th>
+                                            <th>2024 Year End</th>
+                                            <th>Expiry</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${a.map(x => `
+                                            <tr>
+                                                <td><span class="badge ${x.type === 'RSUs' ? 'rsu' : 'option'}">${x.type}</span></td>
+                                                <td>${x.units.toLocaleString()}</td>
+                                                <td>${x.grantDate}</td>
+                                                <td>${x.exercisePrice ? 'C$' + x.exercisePrice.toFixed(2) : '-'}</td>
+                                                <td>C$${x.priceAtGrant.toFixed(2)}</td>
+                                                <td>C$${x.priceAtYearEnd.toFixed(2)}</td>
+                                                <td>${x.expiry}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('companyDetail').innerHTML = h;
         }
 
-        function renderExecutiveCard(exec, currency) {
+        function toggleEquity() {
+            const toggle = document.querySelector('.equity-toggle');
+            const content = document.getElementById('equityContent');
+            toggle.classList.toggle('expanded');
+            content.classList.toggle('visible');
+        }
+
+        function renderExecutiveCard(e, cur) {
             const items = [];
-            if (exec.salary) items.push({ label: 'Base Salary', value: exec.salary });
-            if (exec.cashBonus) items.push({ label: 'Cash Bonus', value: exec.cashBonus });
-            if (exec.annualIncentive) items.push({ label: 'Annual Incentive', value: exec.annualIncentive });
-            if (exec.stockAwardsValue) items.push({ label: 'Stock Awards', value: exec.stockAwardsValue });
-            if (exec.optionAwardsValue) items.push({ label: 'Option Awards', value: exec.optionAwardsValue });
-            if (exec.allOtherComp) items.push({ label: 'Other Compensation', value: exec.allOtherComp });
+            if (e.salary) items.push({ label: 'Base Salary', value: e.salary });
+            if (e.cashBonus) items.push({ label: 'Cash Bonus', value: e.cashBonus });
+            if (e.annualIncentive) items.push({ label: 'Annual Incentive', value: e.annualIncentive });
+            if (e.stockAwardsValue) items.push({ label: 'Stock Awards', value: e.stockAwardsValue });
+            if (e.optionAwardsValue) items.push({ label: 'Option Awards', value: e.optionAwardsValue });
+            if (e.allOtherComp) items.push({ label: 'Other Compensation', value: e.allOtherComp });
 
-            return `<div class="executive-card"><div class="executive-header"><div class="executive-avatar">${getInitials(exec.name)}</div><div class="executive-info"><h4>${exec.name}</h4><div class="role">${exec.role}</div></div></div><div class="comp-breakdown">${items.map(i => `<div class="comp-item"><span class="label">${i.label}</span><span class="value">${formatCurrency(i.value, currency)}</span></div>`).join('')}${exec.stockAwardsUnits ? `<div class="comp-item"><span class="label">Stock Awards (Units)</span><span class="value">${exec.stockAwardsUnits.toLocaleString()}</span></div>` : ''}<div class="comp-item total"><span class="label">Total Compensation</span><span class="value">${formatCurrency(exec.reportedTotal, currency)}</span></div></div>${exec.notes ? `<div class="notes">${exec.notes}</div>` : ''}</div>`;
+            return `
+                <div class="executive-card">
+                    <div class="executive-header">
+                        <div class="executive-avatar">${getInitials(e.name)}</div>
+                        <div class="executive-info">
+                            <h4>${e.name}</h4>
+                            <div class="role">${e.role}</div>
+                        </div>
+                    </div>
+                    <div class="comp-breakdown">
+                        ${items.map(i => `
+                            <div class="comp-item">
+                                <span class="label">${i.label}</span>
+                                <span class="value">${formatCurrency(i.value, cur)}</span>
+                            </div>
+                        `).join('')}
+                        ${e.stockAwardsUnits ? `
+                            <div class="comp-item">
+                                <span class="label">Stock Awards (Units)</span>
+                                <span class="value">${e.stockAwardsUnits.toLocaleString()}</span>
+                            </div>
+                        ` : ''}
+                        <div class="comp-item total">
+                            <span class="label">Total Compensation</span>
+                            <span class="value">${formatCurrency(e.reportedTotal, cur)}</span>
+                        </div>
+                    </div>
+                    ${e.notes ? `<div class="notes">${e.notes}</div>` : ''}
+                </div>
+            `;
         }
 
-        function changeYear(year) { currentYear = year; renderCompanyDetail(); }
+        function changeYear(y) { currentYear = y; renderCompanyDetail(); }
 
         document.addEventListener('DOMContentLoaded', () => {
             renderSummaryTable();
