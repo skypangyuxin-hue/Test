@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Compensation Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #888;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .company-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .company-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .company-card.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 44, 191, 0.2));
+            border-color: #00d4ff;
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .company-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .company-card .currency {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .company-card .total-comp {
+            font-size: 1.1rem;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .detail-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            display: none;
+        }
+
+        .detail-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .year-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .year-tab {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .year-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .year-tab.active {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border-color: transparent;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .executives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .executive-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .executive-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 5px 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .executive-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .executive-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .executive-info h4 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .executive-info .role {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .comp-breakdown {
+            display: grid;
+            gap: 12px;
+        }
+
+        .comp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .comp-item .label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .comp-item .value {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .comp-item.total {
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.15), rgba(123, 44, 191, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .comp-item.total .label {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .comp-item.total .value {
+            color: #00d4ff;
+            font-size: 1.1rem;
+        }
+
+        .notes {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #ffc107;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.85rem;
+            color: #ffc107;
+        }
+
+        .equity-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .equity-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .equity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .equity-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #888;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .equity-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .equity-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge.option {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .badge.rsu {
+            background: rgba(123, 44, 191, 0.2);
+            color: #b57edc;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .stat-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .welcome-message h3 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .executives-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .equity-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Executive Compensation Dashboard</h1>
+        <p>Compare executive compensation across cryptocurrency mining companies</p>
+    </header>
+
+    <div class="container">
+        <div class="company-grid" id="companyGrid">
+            <!-- Company cards will be populated by JS -->
+        </div>
+
+        <div class="detail-panel" id="detailPanel">
+            <div class="welcome-message" id="welcomeMessage">
+                <h3>Select a Company</h3>
+                <p>Click on a company card above to view executive compensation details</p>
+            </div>
+            <div id="companyDetail"></div>
+        </div>
+    </div>
+
+    <script>
+        // Executive Compensation Data
+        const compensationData = {
+            BTBT: {
+                name: "BTBT",
+                fullName: "Bit Digital, Inc.",
+                currency: "USD",
+                years: {
+                    2024: {
+                        executives: [
+                            {
+                                name: "Sam Tabar",
+                                role: "CEO",
+                                salary: 500000,
+                                cashBonus: 1100000,
+                                stockAwardsValue: 3222650,
+                                stockAwardsUnits: 945000,
+                                allOtherComp: 0,
+                                reportedTotal: 4822650
+                            },
+                            {
+                                name: "Erke Huang",
+                                role: "CFO & Director",
+                                salary: 597963,
+                                cashBonus: 1100000,
+                                stockAwardsValue: 3523650,
+                                stockAwardsUnits: 1045000,
+                                allOtherComp: 0,
+                                reportedTotal: 5221613
+                            },
+                            {
+                                name: "Bryan Bullett",
+                                role: "Previously CEO",
+                                salary: 312000,
+                                cashBonus: 0,
+                                stockAwardsValue: 505500,
+                                stockAwardsUnits: 150000,
+                                allOtherComp: 0,
+                                reportedTotal: 817500,
+                                notes: "Stock awards units shown; value in Stock Awards."
+                            }
+                        ]
+                    },
+                    2023: {
+                        executives: [
+                            {
+                                name: "Sam Tabar",
+                                role: "CEO",
+                                salary: 500000,
+                                cashBonus: 0,
+                                stockAwardsValue: 1239500,
+                                stockAwardsUnits: 300000,
+                                allOtherComp: 0,
+                                reportedTotal: 1739500
+                            },
+                            {
+                                name: "Erke Huang",
+                                role: "CFO & Director",
+                                salary: 499459,
+                                cashBonus: 200000,
+                                stockAwardsValue: 2837000,
+                                stockAwardsUnits: 750000,
+                                allOtherComp: 0,
+                                reportedTotal: 3536459
+                            },
+                            {
+                                name: "Bryan Bullett",
+                                role: "Previously CEO",
+                                salary: 1125000,
+                                cashBonus: 0,
+                                stockAwardsValue: 0,
+                                allOtherComp: 0,
+                                reportedTotal: 1125000
+                            }
+                        ]
+                    }
+                }
+            },
+            LMFA: {
+                name: "LMFA",
+                fullName: "LM Funding America, Inc.",
+                currency: "USD",
+                years: {
+                    2024: {
+                        executives: [
+                            {
+                                name: "Bruce Rodgers",
+                                role: "Chairman, CEO & President",
+                                salary: 825000,
+                                cashBonus: 473750,
+                                allOtherComp: 26561,
+                                reportedTotal: 1305311,
+                                notes: "All other comp includes insurance premiums."
+                            },
+                            {
+                                name: "Richard Russell",
+                                role: "Chief Financial Officer",
+                                salary: 550000,
+                                cashBonus: 275000,
+                                allOtherComp: 53238,
+                                reportedTotal: 878238
+                            },
+                            {
+                                name: "Ryan Duran",
+                                role: "VP Operations / President US Digital Mining",
+                                salary: 196346,
+                                cashBonus: 93000,
+                                allOtherComp: 51012,
+                                reportedTotal: 340358
+                            }
+                        ]
+                    },
+                    2023: {
+                        executives: [
+                            {
+                                name: "Bruce Rodgers",
+                                role: "Chairman, CEO & President",
+                                salary: 825000,
+                                cashBonus: 0,
+                                stockAwardsValue: 488345,
+                                optionAwardsValue: 356503,
+                                allOtherComp: 24860,
+                                reportedTotal: 1694708
+                            },
+                            {
+                                name: "Richard Russell",
+                                role: "Chief Financial Officer",
+                                salary: 550000,
+                                cashBonus: 0,
+                                stockAwardsValue: 488345,
+                                optionAwardsValue: 356503,
+                                allOtherComp: 48467,
+                                reportedTotal: 1443315
+                            },
+                            {
+                                name: "Ryan Duran",
+                                role: "VP Operations / President US Digital Mining",
+                                salary: 192500,
+                                cashBonus: 0,
+                                stockAwardsValue: 122086,
+                                optionAwardsValue: 89126,
+                                allOtherComp: 40217,
+                                reportedTotal: 443929
+                            }
+                        ]
+                    }
+                }
+            },
+            HIVE: {
+                name: "HIVE",
+                fullName: "HIVE Digital Technologies",
+                currency: "CAD",
+                years: {
+                    2024: {
+                        executives: [
+                            {
+                                name: "Aydin Kilic",
+                                role: "President & CEO",
+                                salary: 0,
+                                annualIncentive: 162400,
+                                stockAwardsValue: 859564,
+                                optionAwardsValue: 447950,
+                                allOtherComp: 312000,
+                                reportedTotal: 1781914
+                            },
+                            {
+                                name: "Darcy Daubaras",
+                                role: "CFO",
+                                salary: 312000,
+                                annualIncentive: 183600,
+                                optionAwardsValue: 447950,
+                                allOtherComp: 101256,
+                                reportedTotal: 1044806
+                            },
+                            {
+                                name: "Frank Holmes",
+                                role: "Executive Chairman",
+                                salary: 0,
+                                optionAwardsValue: 119453,
+                                allOtherComp: 217000,
+                                reportedTotal: 336453,
+                                notes: "Option-based awards only in 2024."
+                            }
+                        ]
+                    },
+                    2023: {
+                        executives: [
+                            {
+                                name: "Aydin Kilic",
+                                role: "President & CEO",
+                                salary: 0,
+                                annualIncentive: 126600,
+                                stockAwardsValue: 452160,
+                                optionAwardsValue: 353529,
+                                allOtherComp: 312000,
+                                reportedTotal: 1244289
+                            },
+                            {
+                                name: "Darcy Daubaras",
+                                role: "CFO",
+                                salary: 311000,
+                                annualIncentive: 76600,
+                                stockAwardsValue: 594000,
+                                allOtherComp: 99374,
+                                reportedTotal: 1080974
+                            },
+                            {
+                                name: "Frank Holmes",
+                                role: "Executive Chairman",
+                                salary: 0,
+                                stockAwardsValue: 6876000,
+                                allOtherComp: 225921,
+                                reportedTotal: 7101921
+                            }
+                        ]
+                    },
+                    2022: {
+                        executives: [
+                            {
+                                name: "Aydin Kilic",
+                                role: "President & CEO",
+                                salary: 0,
+                                annualIncentive: 61500,
+                                stockAwardsValue: 148000,
+                                optionAwardsValue: 3033361,
+                                allOtherComp: 232258,
+                                reportedTotal: 3181361,
+                                notes: "Reported total does not reconcile; variance flagged."
+                            },
+                            {
+                                name: "Darcy Daubaras",
+                                role: "CFO",
+                                salary: 263750,
+                                annualIncentive: 112500,
+                                allOtherComp: 23437,
+                                reportedTotal: 399687
+                            }
+                        ]
+                    }
+                }
+            },
+            DMG: {
+                name: "DMG",
+                fullName: "DMG Blockchain Solutions",
+                currency: "CAD",
+                years: {
+                    2024: {
+                        executives: [
+                            {
+                                name: "Sheldon Bennett",
+                                role: "CEO & Director",
+                                salary: 387936,
+                                cashBonus: 617100,
+                                reportedTotal: 1005036
+                            },
+                            {
+                                name: "Steven Eliscu",
+                                role: "COO",
+                                salary: 274035,
+                                reportedTotal: 274035
+                            },
+                            {
+                                name: "Adrian Glover",
+                                role: "CTO",
+                                salary: 182046,
+                                reportedTotal: 182046
+                            },
+                            {
+                                name: "Heather Sim",
+                                role: "CFO & Director",
+                                salary: 42000,
+                                allOtherComp: 2000,
+                                reportedTotal: 44000,
+                                notes: "Committee fees included."
+                            },
+                            {
+                                name: "J.D. Abouchar",
+                                role: "Director",
+                                salary: 42000,
+                                allOtherComp: 23000,
+                                reportedTotal: 65000,
+                                notes: "Committee fees included."
+                            },
+                            {
+                                name: "John Place",
+                                role: "Director",
+                                salary: 50000,
+                                allOtherComp: 8000,
+                                reportedTotal: 58000,
+                                notes: "Committee fees included."
+                            }
+                        ]
+                    },
+                    2023: {
+                        executives: [
+                            {
+                                name: "Sheldon Bennett",
+                                role: "CEO & Director",
+                                salary: 338552,
+                                cashBonus: 440000,
+                                reportedTotal: 778552
+                            },
+                            {
+                                name: "Steven Eliscu",
+                                role: "COO",
+                                salary: 273934,
+                                cashBonus: 121680,
+                                reportedTotal: 395614
+                            },
+                            {
+                                name: "Adrian Glover",
+                                role: "CTO",
+                                salary: 185507,
+                                reportedTotal: 185507
+                            },
+                            {
+                                name: "Heather Sim",
+                                role: "CFO & Director",
+                                salary: 18200,
+                                reportedTotal: 18200
+                            },
+                            {
+                                name: "J.D. Abouchar",
+                                role: "Director",
+                                salary: 42000,
+                                allOtherComp: 14000,
+                                reportedTotal: 56000
+                            },
+                            {
+                                name: "John Place",
+                                role: "Director",
+                                salary: 42000,
+                                reportedTotal: 42000
+                            }
+                        ]
+                    }
+                },
+                equityAwards: {
+                    "Sheldon Bennett": [
+                        { type: "Stock Options", units: 375000, grantDate: "2022-12-22", exercisePrice: 0.18, priceAtGrant: 0.17, priceAtYearEnd: 0.27, expiry: "2027-12-22" },
+                        { type: "Stock Options", units: 375000, grantDate: "2023-03-31", exercisePrice: 0.32, priceAtGrant: 0.31, priceAtYearEnd: 0.27, expiry: "2028-03-31" },
+                        { type: "Stock Options", units: 500000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.315, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
+                        { type: "Stock Options", units: 400000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.285, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
+                        { type: "Stock Options", units: 400000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.485, expiry: "2028-12-20" },
+                        { type: "Stock Options", units: 400000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.485, expiry: "2029-03-20" },
+                        { type: "Stock Options", units: 500000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.6, priceAtYearEnd: 0.485, expiry: "2029-06-05" },
+                        { type: "RSUs", units: 1500000, grantDate: "2024-09-19", priceAtGrant: 0.46, priceAtYearEnd: 0.485, expiry: "2025-09-19" }
+                    ],
+                    "Heather Sim": [
+                        { type: "Stock Options", units: 50000, grantDate: "2023-04-26", exercisePrice: 0.31, priceAtGrant: 0.3, priceAtYearEnd: 0.27, expiry: "2028-04-26" },
+                        { type: "Stock Options", units: 150000, grantDate: "2023-06-30", exercisePrice: 0.33, priceAtGrant: 0.315, priceAtYearEnd: 0.27, expiry: "2028-06-30" },
+                        { type: "Stock Options", units: 50000, grantDate: "2023-09-20", exercisePrice: 0.29, priceAtGrant: 0.285, priceAtYearEnd: 0.27, expiry: "2028-09-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2023-12-20", exercisePrice: 0.53, priceAtGrant: 0.51, priceAtYearEnd: 0.485, expiry: "2028-12-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2024-03-20", exercisePrice: 0.58, priceAtGrant: 0.56, priceAtYearEnd: 0.485, expiry: "2029-03-20" },
+                        { type: "Stock Options", units: 50000, grantDate: "2024-06-05", exercisePrice: 0.61, priceAtGrant: 0.6, priceAtYearEnd: 0.485, expiry: "2029-06-05" },
+                        { type: "RSUs", units: 50000, grantDate: "2024-09-19", priceAtGrant: 0.46, priceAtYearEnd: 0.485, expiry: "2025-09-19" }
+                    ]
+                }
+            },
+            Phoenix: {
+                name: "Phoenix",
+                fullName: "Phoenix Group",
+                currency: "USD",
+                years: {
+                    2024: {
+                        executives: [
+                            {
+                                name: "Key Management Personnel",
+                                role: "Aggregate (2 KMP)",
+                                reportedTotal: 3750000,
+                                notes: "Aggregate compensation for key management personnel."
+                            }
+                        ],
+                        additionalInfo: "Directors' Fee: 30,000 AED per board meeting"
+                    },
+                    2023: {
+                        executives: [
+                            {
+                                name: "Key Management Personnel",
+                                role: "Aggregate",
+                                reportedTotal: 2201000,
+                                notes: "Aggregate compensation for key management personnel."
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        // Format currency
+        function formatCurrency(amount, currency) {
+            if (amount === undefined || amount === null) return '-';
+            const symbol = currency === 'CAD' ? 'C$' : '$';
+            return symbol + amount.toLocaleString('en-US');
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').substring(0, 2);
+        }
+
+        // Calculate total compensation for a company/year
+        function getTotalComp(company, year) {
+            const yearData = compensationData[company].years[year];
+            if (!yearData) return 0;
+            return yearData.executives.reduce((sum, exec) => sum + (exec.reportedTotal || 0), 0);
+        }
+
+        // Get latest year for a company
+        function getLatestYear(company) {
+            const years = Object.keys(compensationData[company].years).map(Number);
+            return Math.max(...years);
+        }
+
+        // Render company cards
+        function renderCompanyCards() {
+            const grid = document.getElementById('companyGrid');
+            grid.innerHTML = '';
+
+            Object.keys(compensationData).forEach(company => {
+                const data = compensationData[company];
+                const latestYear = getLatestYear(company);
+                const totalComp = getTotalComp(company, latestYear);
+
+                const card = document.createElement('div');
+                card.className = 'company-card';
+                card.dataset.company = company;
+                card.innerHTML = `
+                    <h3>${data.name}</h3>
+                    <div class="currency">${data.currency}</div>
+                    <div class="total-comp">FY${latestYear}: ${formatCurrency(totalComp, data.currency)}</div>
+                `;
+                card.addEventListener('click', () => selectCompany(company));
+                grid.appendChild(card);
+            });
+        }
+
+        // Select a company
+        let currentCompany = null;
+        let currentYear = null;
+
+        function selectCompany(company) {
+            currentCompany = company;
+            currentYear = getLatestYear(company);
+
+            // Update active state on cards
+            document.querySelectorAll('.company-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.company === company);
+            });
+
+            // Show detail panel
+            document.getElementById('detailPanel').classList.add('active');
+            document.getElementById('welcomeMessage').style.display = 'none';
+
+            renderCompanyDetail();
+        }
+
+        // Render company detail
+        function renderCompanyDetail() {
+            const company = compensationData[currentCompany];
+            const yearData = company.years[currentYear];
+            const years = Object.keys(company.years).map(Number).sort((a, b) => b - a);
+
+            // Calculate stats
+            const totalComp = yearData.executives.reduce((sum, exec) => sum + (exec.reportedTotal || 0), 0);
+            const avgComp = totalComp / yearData.executives.length;
+            const maxComp = Math.max(...yearData.executives.map(e => e.reportedTotal || 0));
+
+            let html = `
+                <div class="detail-header">
+                    <div>
+                        <h2>${company.name}</h2>
+                        <p style="color: #888; margin-top: 5px;">${company.fullName}</p>
+                    </div>
+                    <div class="year-tabs">
+                        ${years.map(year => `
+                            <button class="year-tab ${year === currentYear ? 'active' : ''}" onclick="changeYear(${year})">
+                                FY ${year}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${formatCurrency(totalComp, company.currency)}</div>
+                        <div class="stat-label">Total Compensation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${formatCurrency(Math.round(avgComp), company.currency)}</div>
+                        <div class="stat-label">Average per Executive</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${yearData.executives.length}</div>
+                        <div class="stat-label">Executives</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${formatCurrency(maxComp, company.currency)}</div>
+                        <div class="stat-label">Highest Compensation</div>
+                    </div>
+                </div>
+
+                ${yearData.additionalInfo ? `<div class="notes" style="margin-bottom: 20px;">${yearData.additionalInfo}</div>` : ''}
+
+                <div class="executives-grid">
+                    ${yearData.executives.map(exec => renderExecutiveCard(exec, company.currency)).join('')}
+                </div>
+            `;
+
+            // Add equity awards section for DMG
+            if (currentCompany === 'DMG' && company.equityAwards) {
+                html += `
+                    <div class="equity-section">
+                        <h3>Equity Awards Details</h3>
+                        ${Object.entries(company.equityAwards).map(([name, awards]) => `
+                            <h4 style="margin: 20px 0 15px; color: #00d4ff;">${name}</h4>
+                            <table class="equity-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Units</th>
+                                        <th>Grant Date</th>
+                                        <th>Exercise Price</th>
+                                        <th>Price at Grant</th>
+                                        <th>Year End Price</th>
+                                        <th>Expiry</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${awards.map(award => `
+                                        <tr>
+                                            <td><span class="badge ${award.type === 'RSUs' ? 'rsu' : 'option'}">${award.type}</span></td>
+                                            <td>${award.units.toLocaleString()}</td>
+                                            <td>${award.grantDate}</td>
+                                            <td>${award.exercisePrice ? 'C$' + award.exercisePrice.toFixed(2) : '-'}</td>
+                                            <td>C$${award.priceAtGrant.toFixed(2)}</td>
+                                            <td>C$${award.priceAtYearEnd.toFixed(2)}</td>
+                                            <td>${award.expiry}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            document.getElementById('companyDetail').innerHTML = html;
+        }
+
+        // Render executive card
+        function renderExecutiveCard(exec, currency) {
+            const compItems = [];
+
+            if (exec.salary) compItems.push({ label: 'Base Salary', value: exec.salary });
+            if (exec.cashBonus) compItems.push({ label: 'Cash Bonus', value: exec.cashBonus });
+            if (exec.annualIncentive) compItems.push({ label: 'Annual Incentive', value: exec.annualIncentive });
+            if (exec.stockAwardsValue) compItems.push({ label: 'Stock Awards', value: exec.stockAwardsValue });
+            if (exec.optionAwardsValue) compItems.push({ label: 'Option Awards', value: exec.optionAwardsValue });
+            if (exec.allOtherComp) compItems.push({ label: 'Other Compensation', value: exec.allOtherComp });
+
+            return `
+                <div class="executive-card">
+                    <div class="executive-header">
+                        <div class="executive-avatar">${getInitials(exec.name)}</div>
+                        <div class="executive-info">
+                            <h4>${exec.name}</h4>
+                            <div class="role">${exec.role}</div>
+                        </div>
+                    </div>
+                    <div class="comp-breakdown">
+                        ${compItems.map(item => `
+                            <div class="comp-item">
+                                <span class="label">${item.label}</span>
+                                <span class="value">${formatCurrency(item.value, currency)}</span>
+                            </div>
+                        `).join('')}
+                        ${exec.stockAwardsUnits ? `
+                            <div class="comp-item">
+                                <span class="label">Stock Awards (Units)</span>
+                                <span class="value">${exec.stockAwardsUnits.toLocaleString()}</span>
+                            </div>
+                        ` : ''}
+                        <div class="comp-item total">
+                            <span class="label">Total Compensation</span>
+                            <span class="value">${formatCurrency(exec.reportedTotal, currency)}</span>
+                        </div>
+                    </div>
+                    ${exec.notes ? `<div class="notes">${exec.notes}</div>` : ''}
+                </div>
+            `;
+        }
+
+        // Change year
+        function changeYear(year) {
+            currentYear = year;
+            renderCompanyDetail();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCompanyCards();
+            document.getElementById('detailPanel').classList.add('active');
+        });
+    </script>
+</body>
+</html>
