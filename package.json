@@ -1,0 +1,17 @@
+{
+  "name": "x-post-reader",
+  "version": "1.0.0",
+  "description": "Chrome automation to read first X post from 2026",
+  "main": "readPost.js",
+  "type": "module",
+  "scripts": {
+    "start": "node readPost.js"
+  },
+  "keywords": ["puppeteer", "x", "twitter", "automation"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer-core": "^21.6.1",
+    "chrome-launcher": "^1.1.0"
+  }
+}
