@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-core';
-import chromeLauncher from 'chrome-launcher';
+import * as chromeLauncher from 'chrome-launcher';
 
 async function readFirstPostOf2026() {
   console.log('🚀 Launching Chrome...');
