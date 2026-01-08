@@ -687,6 +687,133 @@
 
         function changeYear(y) { currentYear = y; renderCompanyDetail(); }
 
+        // Claude Chrome Extension Integration
+        let extensionConnected = false;
+
+        // Listen for messages from Chrome extension
+        window.addEventListener('message', (event) => {
+            // Only accept messages from the same window
+            if (event.source !== window) return;
+
+            // Handle extension connected signal
+            if (event.data.type === 'EXTENSION_CONNECTED') {
+                extensionConnected = true;
+                console.log('Claude Chrome Extension connected!', event.data);
+
+                // Send welcome message back to extension
+                sendToExtension({
+                    type: 'DASHBOARD_READY',
+                    message: 'Executive Compensation Dashboard is ready',
+                    companies: Object.keys(compensationData),
+                    timestamp: Date.now()
+                });
+
+                return;
+            }
+
+            // Handle messages from extension
+            if (event.data.type === 'FROM_EXTENSION') {
+                console.log('Message from extension:', event.data);
+                handleExtensionMessage(event.data.payload);
+            }
+        });
+
+        // Send message to Chrome extension
+        function sendToExtension(data) {
+            window.postMessage({
+                type: 'FROM_DASHBOARD',
+                payload: data
+            }, '*');
+            console.log('Sent to extension:', data);
+        }
+
+        // Handle incoming messages from extension
+        function handleExtensionMessage(message) {
+            console.log('Handling extension message:', message);
+
+            // Example: Extension can request company data
+            if (message.action === 'GET_COMPANIES') {
+                sendToExtension({
+                    type: 'COMPANY_LIST',
+                    companies: Object.keys(compensationData).map(key => ({
+                        ticker: key,
+                        fullName: compensationData[key].fullName,
+                        currency: compensationData[key].currency
+                    }))
+                });
+            }
+
+            // Example: Extension can request specific company details
+            if (message.action === 'GET_COMPANY_DATA' && message.company) {
+                const company = compensationData[message.company];
+                if (company) {
+                    sendToExtension({
+                        type: 'COMPANY_DATA',
+                        company: message.company,
+                        data: company
+                    });
+                }
+            }
+
+            // Example: Extension can select a company
+            if (message.action === 'SELECT_COMPANY' && message.company) {
+                if (compensationData[message.company]) {
+                    selectCompany(message.company);
+                    sendToExtension({
+                        type: 'COMPANY_SELECTED',
+                        company: message.company,
+                        success: true
+                    });
+                }
+            }
+
+            // Example: Extension can change year
+            if (message.action === 'CHANGE_YEAR' && message.year && currentCompany) {
+                const years = Object.keys(compensationData[currentCompany].years).map(Number);
+                if (years.includes(message.year)) {
+                    changeYear(message.year);
+                    sendToExtension({
+                        type: 'YEAR_CHANGED',
+                        year: message.year,
+                        success: true
+                    });
+                }
+            }
+
+            // Example: Extension can get current state
+            if (message.action === 'GET_STATE') {
+                sendToExtension({
+                    type: 'CURRENT_STATE',
+                    currentCompany: currentCompany,
+                    currentYear: currentYear,
+                    extensionConnected: extensionConnected
+                });
+            }
+
+            // Handle ping
+            if (message.action === 'ping') {
+                sendToExtension({
+                    type: 'PONG',
+                    message: 'Dashboard is alive!',
+                    timestamp: Date.now()
+                });
+            }
+        }
+
+        // Signal dashboard is ready when page loads
+        window.addEventListener('load', () => {
+            console.log('Dashboard ready, waiting for Claude Chrome Extension...');
+
+            // Send initial signal (in case extension loaded first)
+            setTimeout(() => {
+                sendToExtension({
+                    type: 'DASHBOARD_READY',
+                    message: 'Executive Compensation Dashboard loaded',
+                    timestamp: Date.now()
+                });
+            }, 500);
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             renderSummaryTable();
             renderCompanyCards();
