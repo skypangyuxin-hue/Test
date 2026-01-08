@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Chrome Integration Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .result {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .info {
+            border-left-color: #17a2b8;
+            background: #d1ecf1;
+        }
+
+        .clickable {
+            cursor: pointer;
+            padding: 10px;
+            background: #fff;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .clickable:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        #console-log {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Claude Chrome Integration Test</h1>
+        <p class="subtitle">测试页面 - 验证 Claude Code 的浏览器控制功能</p>
+
+        <!-- Connection Status -->
+        <div class="test-section">
+            <h2>📡 连接状态</h2>
+            <p>Claude in Chrome 扩展: <span id="extension-status" class="status inactive">未检测到</span></p>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">
+                页面标题: <strong id="page-title">Claude Chrome Integration Test</strong>
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                当前 URL: <strong id="page-url">-</strong>
+            </p>
+        </div>
+
+        <!-- Interactive Elements -->
+        <div class="test-section">
+            <h2>🖱️ 可点击元素测试</h2>
+            <p style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                让 Claude Code 点击这些按钮
+            </p>
+            <button id="btn-1" onclick="handleClick('Button 1')">测试按钮 1</button>
+            <button id="btn-2" onclick="handleClick('Button 2')">测试按钮 2</button>
+            <button id="btn-3" onclick="handleClick('Button 3')">测试按钮 3</button>
+            <div id="click-result"></div>
+        </div>
+
+        <!-- Input Test -->
+        <div class="test-section">
+            <h2>⌨️ 输入框测试</h2>
+            <p style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                让 Claude Code 在这里输入文本
+            </p>
+            <input type="text" id="test-input" placeholder="Claude 可以在这里输入文本...">
+            <button onclick="showInputValue()">显示输入内容</button>
+            <div id="input-result"></div>
+        </div>
+
+        <!-- DOM Inspection -->
+        <div class="test-section">
+            <h2>🔍 DOM 检查测试</h2>
+            <p style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                让 Claude Code 读取页面内容
+            </p>
+            <div class="clickable" data-test="element-1">
+                📦 可检查元素 1 (data-test="element-1")
+            </div>
+            <div class="clickable" data-test="element-2">
+                📦 可检查元素 2 (data-test="element-2")
+            </div>
+            <button onclick="logPageInfo()">记录页面信息到控制台</button>
+        </div>
+
+        <!-- Console Log -->
+        <div class="test-section">
+            <h2>📝 控制台日志</h2>
+            <p style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                Claude Code 可以读取这些日志
+            </p>
+            <button onclick="logMessage('info')">Info 日志</button>
+            <button onclick="logMessage('error')">Error 日志</button>
+            <button onclick="logMessage('warn')">Warning 日志</button>
+            <div id="console-log"></div>
+        </div>
+
+        <!-- Navigation Test -->
+        <div class="test-section">
+            <h2>🧭 导航测试</h2>
+            <p style="margin-bottom: 10px; font-size: 0.9rem; color: #666;">
+                让 Claude Code 导航到其他页面
+            </p>
+            <button onclick="navigateTo('index.html')">前往仪表板</button>
+            <button onclick="window.location.reload()">刷新页面</button>
+        </div>
+    </div>
+
+    <script>
+        // Update page info
+        document.getElementById('page-url').textContent = window.location.href;
+
+        // Click handler
+        function handleClick(btnName) {
+            const result = document.getElementById('click-result');
+            result.className = 'result success';
+            result.textContent = `✓ ${btnName} 被点击了！时间: ${new Date().toLocaleTimeString()}`;
+            console.log(`[CLICK] ${btnName} was clicked`);
+        }
+
+        // Show input value
+        function showInputValue() {
+            const input = document.getElementById('test-input');
+            const result = document.getElementById('input-result');
+            result.className = 'result info';
+            result.textContent = `输入内容: "${input.value}"`;
+            console.log(`[INPUT] Value: ${input.value}`);
+        }
+
+        // Log page info
+        function logPageInfo() {
+            const info = {
+                title: document.title,
+                url: window.location.href,
+                elements: document.querySelectorAll('[data-test]').length,
+                buttons: document.querySelectorAll('button').length,
+                timestamp: new Date().toISOString()
+            };
+            console.log('[PAGE INFO]', info);
+            alert('页面信息已记录到控制台！请在 DevTools 中查看。');
+        }
+
+        // Log messages
+        const logContainer = document.getElementById('console-log');
+        function logMessage(type) {
+            const timestamp = new Date().toLocaleTimeString();
+            const messages = {
+                info: `[INFO] ${timestamp} - 这是一条信息日志`,
+                error: `[ERROR] ${timestamp} - 这是一条错误日志`,
+                warn: `[WARN] ${timestamp} - 这是一条警告日志`
+            };
+
+            const msg = messages[type];
+
+            // Log to browser console
+            if (type === 'error') console.error(msg);
+            else if (type === 'warn') console.warn(msg);
+            else console.log(msg);
+
+            // Display in page
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = msg;
+            logContainer.insertBefore(entry, logContainer.firstChild);
+
+            // Keep only last 10 entries
+            while (logContainer.children.length > 10) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        // Navigate
+        function navigateTo(url) {
+            console.log(`[NAVIGATION] Navigating to ${url}`);
+            window.location.href = url;
+        }
+
+        // Check for Claude extension
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'EXTENSION_CONNECTED') {
+                const status = document.getElementById('extension-status');
+                status.className = 'status active';
+                status.textContent = '已连接';
+                console.log('[CLAUDE EXTENSION] Connected!', event.data);
+            }
+        });
+
+        // Log initial load
+        console.log('[PAGE LOADED] Claude Chrome Integration Test Page');
+        console.log('[INFO] Page Title:', document.title);
+        console.log('[INFO] URL:', window.location.href);
+        console.log('[INFO] Ready for Claude Code interaction!');
+    </script>
+</body>
+</html>
